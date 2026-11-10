@@ -52,6 +52,6 @@ change it. The project overview is in the [repository README](../README.md).
   [SECURITY.md](../SECURITY.md), [CODE_OF_CONDUCT.md](../CODE_OF_CONDUCT.md),
   [ATTRIBUTION.md](../ATTRIBUTION.md)
 - [ledger/](../ledger/): per-version build provenance records
-- [verification/](../verification/): dated verification records
-- [tests/v29.3/README.md](../tests/v29.3/README.md): V29.3 golden corpus and scorer
+- `verification/` (dated verification records) and `tests/v29.3/` (V29.3 golden
+  corpus and scorer) are not included in this public snapshot
 - [data/loanspell/README.md](../data/loanspell/README.md): loanword spelling data

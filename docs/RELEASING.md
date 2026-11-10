@@ -41,7 +41,8 @@ proprietary Gboard code (see [`LICENSING-AUDIT.md`](LICENSING-AUDIT.md)).
    Both [`ci.yml`](../.github/workflows/ci.yml) and
    [`tests.yml`](../.github/workflows/tests.yml) must pass on `main`. If the
    release changes the conversion behavior, also score the golden corpus in
-   [`tests/v29.3/`](../tests/v29.3/README.md) against the previous baseline.
+   `tests/v29.3/` (not included in this public snapshot) against the previous
+   baseline.
 2. **Changelog.** Add a section to [`CHANGELOG.md`](../CHANGELOG.md) headed
    `## V<version> - YYYY-MM-DD` (dates are AEST/AEDT), with short bullets and a
    link to the release notes. State evidence levels honestly: host-tested,
@@ -72,7 +73,8 @@ proprietary Gboard code (see [`LICENSING-AUDIT.md`](LICENSING-AUDIT.md)).
   (`v27-provenance.md` to `v29.3-provenance.md`): date, base version, artifact
   hashes and signer certificate fingerprint for the private build, the patch
   surface, and the evidence behind the release.
-- [`verification/`](../verification/) holds dated verification records.
+- `verification/` holds dated verification records (not included in this public
+  snapshot).
 - Never include an APK, a DEX, a key, or Google content in these records. Hashes
   only.
 

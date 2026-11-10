@@ -55,10 +55,10 @@ source tools/tool-env.sh
 `bootstrap_tools.sh` downloads smali, baksmali and dexlib2 2.5.2 with their
 dependencies, r8/d8 8.3.37, aapt2 8.3.0, apksig 8.3.0 and android.jar 4.1.1.4
 from Maven Central and Google's Maven repository. Every file is checked against
-[`tools-src/toolchain.sha256`](../tools-src/toolchain.sha256); a mismatch stops
-the script. It then builds the small signer/verifier from
-[`tools-src/MiniApkSigner.java`](../tools-src/MiniApkSigner.java) and writes
-`tools/tool-env.sh`.
+`tools-src/toolchain.sha256`; a mismatch stops the script. It then builds the
+small signer/verifier from `tools-src/MiniApkSigner.java` and writes
+`tools/tool-env.sh`. Neither `tools-src/` file is included in this public
+snapshot, so the script stops at its checksum step here.
 
 Set `TOOLS_DIR` before running it to put the toolchain somewhere other than
 `./tools`. Always `source tools/tool-env.sh` in each new shell: it sets

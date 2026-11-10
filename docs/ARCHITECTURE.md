@@ -134,9 +134,10 @@ Fail-safe contract: any null, blank or unknown input returns the stock input
 unchanged. `lastHookStatus` records the outcome of the last hook call for
 device-side validation, and `HOOK_VERSION` identifies the hook ABI.
 
-The policy is covered by
-[`GboardRamblerLiteScriptRuntimeTest`](../tests/src/com/akshaykadam/pixelboard/extension/ramblerlite/GboardRamblerLiteScriptRuntimeTest.java)
-(51 assertions), stage 1 of the static suite.
+The policy is covered by `GboardRamblerLiteScriptRuntimeTest`
+(`tests/src/com/akshaykadam/pixelboard/extension/ramblerlite/`, 51 assertions),
+stage 1 of the static suite. That test source is not included in this public
+snapshot.
 
 ## Further runtime layers in extension-src
 
@@ -160,8 +161,8 @@ Hooks for these helpers in the patch layer's own classes are recorded in
 background: [`V28-SEGMENT-LOCK.md`](V28-SEGMENT-LOCK.md),
 [`V29-DESIGN.md`](V29-DESIGN.md) and
 [`V29.3-RELEASE-NOTES.md`](V29.3-RELEASE-NOTES.md). The V29.3 golden corpus and
-scorer are in [`tests/v29.3/`](../tests/v29.3/README.md); they need the
-maintainer build's runtime jar and are not part of CI.
+scorer live in `tests/v29.3/` (not included in this public snapshot); they need
+the maintainer build's runtime jar and are not part of CI.
 
 ## CI suite and the synthetic APK
 
@@ -185,7 +186,8 @@ hashes have one source. `build_fixture.sh` assembles `classes.dex` with smali,
 compiles the runtime with `javac` and d8 into `classes2.dex`, links the manifest
 with aapt2 and signs with a locally generated, fixture-only key.
 
-[`tests/run_tests.sh`](../tests/run_tests.sh) runs 17 checks in five stages:
+`tests/run_tests.sh` (not included in this public snapshot) runs 17 checks in
+five stages:
 
 | Stage | What it asserts |
 | --- | --- |
