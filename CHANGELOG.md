@@ -11,6 +11,7 @@ Repository housekeeping for the public source snapshot. No patcher behaviour, ru
 - Links in the README, docs, site page and community files point at this repository instead of the private original. Release links go to the changelog and release notes, because no release has been published here. Links to files that are not in the snapshot are plain text. The two CI-run URLs in `ledger/` keep their run ids as text.
 - README: new "What's here" section, and CI and licence badges for this repository. The release and static-suite badges are gone.
 - Removed three duplicated `.github/` trees that GitHub never read.
+- 4 new Python unit tests (68 in total). `tests/python/test_public_links.py` fails if a tracked Markdown, YAML or HTML file links to the private original repository, or if a relative link in any tracked Markdown file points at a missing file. One more homepage test forbids release and static-suite badges.
 
 ## V29.5 - 2026-10-24 (in review, not released)
 
