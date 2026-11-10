@@ -10,7 +10,12 @@ clipboard, pin all three, then:
 Every step saves a screenshot and a UI dump to clip-artifacts/.
 Exit code 0 = all checks passed; 1 = a check failed; 2 = could not drive UI.
 """
-import os, re, subprocess, sys, time, json
+import json
+import os
+import re
+import subprocess
+import sys
+import time
 import xml.etree.ElementTree as ET
 
 PKG = os.environ.get("PACKAGE_NAME", "com.aidev2024.ramblerbangla")
@@ -184,7 +189,7 @@ def open_clipboard(field):
 
 def main():
     ime = ""
-    for attempt in range(20):  # package manager / IMMS can lag right after boot + install
+    for _ in range(20):  # package manager / IMMS can lag right after boot + install
         ime = sh("adb shell ime list -a -s | tr -d '\\r' | grep -m1 '^%s/'" % PKG).strip()
         if ime:
             break

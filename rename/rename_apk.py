@@ -25,7 +25,6 @@ import json
 import os
 import re
 import shutil
-import struct
 import subprocess
 import sys
 import zipfile
@@ -139,7 +138,10 @@ def build_aligned_zip(entries, out_path):
     is re-signed v2 afterwards and a leftover v1 signature over the old
     content would fail verification. Compressed entries are deflated at
     level 9 with raw DEFLATE (same stream zipfile would produce)."""
-    import zlib, struct, binascii, re as _re
+    import binascii
+    import re as _re
+    import struct
+    import zlib
     sig_drop = _re.compile(
         r'^META-INF/(MANIFEST\.MF|[^/]+\.(SF|RSA|DSA|EC))$',
         _re.IGNORECASE)
@@ -205,7 +207,6 @@ def main():
                for i in zf.infolist()]
 
     # 1. manifest + res xmls (AXML)
-    mrules_cache = {}
     out_entries = []
     for name, data, ctype in entries:
         if name == 'AndroidManifest.xml':

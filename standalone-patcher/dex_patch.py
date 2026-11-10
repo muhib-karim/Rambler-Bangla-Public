@@ -433,7 +433,7 @@ def patch(apk, out_apk, profile, workdir, baksmali_jar, smali_jar,
     # 3. Verify the prompt-owner fingerprint before touching anything.
     pcls, pname, pproto = profile.method("prompt_owner")
     plines = None
-    for dn2, dd2 in dexes:
+    for _, dd2 in dexes:
         ppath = os.path.join(dd2, smali_class_path(pcls))
         if os.path.exists(ppath):
             with open(ppath, encoding="utf-8") as fh:
