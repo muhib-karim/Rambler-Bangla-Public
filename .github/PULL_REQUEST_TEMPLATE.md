@@ -13,7 +13,8 @@
 ## Testing
 
 - [ ] `python3 -m unittest discover -s tests/python -v` passes
-- [ ] `bash tests/run_tests.sh` reports `0 failed` (after `scripts/bootstrap_tools.sh` and `source tools/tool-env.sh`)
+- [ ] `ruff check .` passes
+- [ ] `bash tests/run_tests.sh` reports `0 failed` (after `scripts/bootstrap_tools.sh` and `source tools/tool-env.sh`). Only where the static suite is present: the public snapshot does not ship it
 - [ ] Conversion changes come with input/expected fixtures that lock the behavior
 
 ## Checklist

@@ -32,7 +32,8 @@ docs/V29-DESIGN.md v2 (amendment map in section 9).
 - Spelling corpus (docs/spelling-corpus-v1.tsv): 35/36 WRONG fixed byte-exact; zero regressions on OK/DIALECT.
 - CI: android-smoke run #13 - SUCCESS (total 3m 24s; job smoke 3m 19s) on the exact prod bytes above
   (runner downloaded the APK by sha from the tmpfiles upload; workflow android-smoke.yml, workflow_dispatch
-  by ai-dev-2024 on main). Run page: https://github.com/muhib-karim/Rambler-Bangla/actions/runs/35781711819
+  by ai-dev-2024 on main). Actions run 35781711819 in the project's original private
+  repository (run page not publicly viewable).
   Steps green: validate APK host + download (5s); enable KVM; install, launch, and inspect APK on the
   emulator (3m 9s); upload smoke evidence. Artifact rambler-apk-smoke-35781711819 (427 KB, digest
   sha256:288e308d8c381eb8d4d6cd1beb9e8ca1c33ef31bff719f50bae5f03c1f298501).

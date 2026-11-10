@@ -2,6 +2,16 @@
 
 All notable changes to Rambler Bangla. Dates are AEST/AEDT. Test builds are maintainer builds, not public downloads; see the README section "Source only, no APKs".
 
+## Public snapshot housekeeping - 2026-11-10
+
+Repository housekeeping for the public source snapshot. No patcher behaviour, runtime, fingerprint or signing changes, and no APKs.
+
+- CI (`ci.yml`) gates pull requests with the Python unit tests on Python 3.11 and 3.12, ruff and a gitleaks secret scan, with every action pinned to a commit SHA. The static-suite job is gone from CI because `tests/run_tests.sh` and `tools-src/` are not part of this snapshot. `tests.yml` is manual-only, says so in its first step, and gates on the exact `TEST SUITE: N passed, 0 failed` line.
+- New `pyproject.toml` with a small ruff configuration. Lint fixes with no behaviour change: unused imports and a dead variable in `fixtures/build_fixture.py`, `rename/rename_apk.py` and `scripts/clip_e2e.py`, and an unused loop variable in `standalone-patcher/dex_patch.py`.
+- Links in the README, docs, site page and community files point at this repository instead of the private original. Release links go to the changelog and release notes, because no release has been published here. Links to files that are not in the snapshot are plain text. The two CI-run URLs in `ledger/` keep their run ids as text.
+- README: new "What's here" section, and CI and licence badges for this repository. The release and static-suite badges are gone.
+- Removed three duplicated `.github/` trees that GitHub never read.
+
 ## V29.5 - 2026-10-24 (in review, not released)
 
 Clipboard Recent | History. Static and host-tested only: no phone or emulator has run this build yet. It is an overlay on the maintainer's V29.4 rc4 build, not a published release.

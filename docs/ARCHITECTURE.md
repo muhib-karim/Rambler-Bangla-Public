@@ -202,9 +202,12 @@ standard-library unit tests for the patcher's helpers and checks that the
 loanword override block in the Java runtime matches
 `data/loanspell/overrides.tsv`.
 
-GitHub Actions runs both suites on every push to `main` and every pull request
-([`ci.yml`](../.github/workflows/ci.yml)); [`tests.yml`](../.github/workflows/tests.yml)
-runs the static suite on its own. The toolchain is fetched by
+In the project's original repository, GitHub Actions ran both suites on every
+push to `main` and every pull request. In this public snapshot
+[`ci.yml`](../.github/workflows/ci.yml) runs the Python unit tests (3.11 and
+3.12), ruff and a gitleaks scan. The static suite's sources are not included,
+so [`tests.yml`](../.github/workflows/tests.yml) is manual-only and stops with a
+message saying so. The toolchain is fetched by
 `scripts/bootstrap_tools.sh` and pinned by SHA-256 in
 `tools-src/toolchain.sha256`. Three further workflows (`android-smoke.yml`,
 `clipboard-e2e.yml`, `keyboard-onboarding-probe.yml`) are manual emulator checks

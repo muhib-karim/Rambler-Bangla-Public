@@ -1,24 +1,32 @@
 <p align="center"><img src="docs/banner.svg" alt="Rambler Bangla: Bengali-first voice typing patch for Gboard 18.3.1" width="100%"></p>
 
-> **Public source snapshot, 9 November 2026.** This repository publishes the
-> existing Gboard 18.3.1 patch source and experimental beta analysis tooling.
-> Beta personalization is **not enabled or tested**. No beta patch, APK or new
-> tagged release is provided. Local Python checks: 64 discovered, 63 passed,
-> 1 skipped for a missing JDK. CI has not been verified for this snapshot.
-> Historical release links below refer to the project's original repository
-> and may require maintainer access. The existing project site is a historical
-> reference, not a beta-release announcement.
+## What's here
 
+This is the **public source snapshot** (9 November 2026) of Rambler Bangla, a fail-closed patch layer that keeps Gboard 18.3.1 voice typing in Bengali script. It is source only: no APK, beta patch, tag or release is published from this repository.
+
+- **Included:** the smali patcher (`standalone-patcher/`), the Java policy runtime (`extension-src/`), the fingerprint profile, the synthetic fixture sources, the rename tooling, the loanword data, the design and evidence docs, the build ledgers, the beta-analysis script and 65 Python unit tests.
+- **Not included:** `tests/run_tests.sh` (the static suite), `tests/v29.3/` (the golden corpus), the JVM policy test, `tools-src/` (toolchain checksums and `MiniApkSigner.java`) and `verification/`. `scripts/bootstrap_tools.sh` needs `tools-src/` and stops at its checksum step without it, so the toolchain setup, the static suite and the fixture build do not complete from this snapshot as shipped.
+- **Not enabled or tested:** beta personalization. [`docs/BETA-PERSONALIZATION-ANALYSIS.md`](docs/BETA-PERSONALIZATION-ANALYSIS.md) is analysis only.
+- **History:** the release tags, the earlier CI runs and the [project site](https://muhib-karim.github.io/Rambler-Bangla/) belong to the project's original repository and are a historical reference here.
+
+Run the tests with Python 3.11 or 3.12:
+
+```bash
+python3 -m unittest discover -s tests/python -v      # stdlib only; one test needs a JDK and is skipped without it
+python3 -m pip install ruff==0.17.4 && ruff check .
+```
+
+[`ci.yml`](.github/workflows/ci.yml) runs both on every pull request, plus a gitleaks secret scan.
+
+---
 
 <h3 align="center">Dictate in Bangla. Get Bangla.</h3>
 
 <p align="center">A fail-closed, fingerprint-guarded patch layer that keeps Gboard 18.3.1 voice typing in Bengali script.</p>
 
 <p align="center">
-<a href="https://github.com/muhib-karim/Rambler-Bangla/actions/workflows/ci.yml"><img src="https://github.com/muhib-karim/Rambler-Bangla/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
-<a href="https://github.com/muhib-karim/Rambler-Bangla/actions/workflows/tests.yml"><img src="https://github.com/muhib-karim/Rambler-Bangla/actions/workflows/tests.yml/badge.svg" alt="Static test suite"></a>
-<a href="https://github.com/muhib-karim/Rambler-Bangla/releases/latest"><img src="https://img.shields.io/github/v/release/muhib-karim/Rambler-Bangla" alt="Latest release"></a>
-<a href="LICENSE"><img src="https://img.shields.io/github/license/muhib-karim/Rambler-Bangla" alt="Licence: GPL-3.0"></a>
+<a href="https://github.com/muhib-karim/Rambler-Bangla-Public/actions/workflows/ci.yml"><img src="https://github.com/muhib-karim/Rambler-Bangla-Public/actions/workflows/ci.yml/badge.svg?branch=main" alt="CI"></a>
+<a href="LICENSE"><img src="https://img.shields.io/github/license/muhib-karim/Rambler-Bangla-Public" alt="Licence: GPL-3.0"></a>
 <img src="https://img.shields.io/badge/Gboard-18.3.1-0B1F3B" alt="Targets Gboard 18.3.1 only">
 <img src="https://img.shields.io/badge/distribution-source%20only-F6B13E" alt="Source only, no APKs">
 </p>
@@ -33,12 +41,13 @@
 
 ## What it is and why
 
-Gboard's on-device voice cleanup stage tends to rewrite Bengali dictation into Latin letters ("ami bhalo achi" instead of "আমি ভালো আছি"), and it mangles sentences that mix Bangla and English. Rambler Bangla is an open-source patch layer for one exact build, Gboard 18.3.1, that fixes this at the source: a **fail-closed smali patcher** (Python) proves it is looking at the profiled build and inserts two hooks, a **pure-Java policy runtime** keeps Bangla in Bengali script and picks one language per sentence, and a **device-free CI suite** builds a synthetic APK, patches it and checks every step, including the refusals, on every push. It is a source-only tool: you patch an APK you obtain yourself and sign it with your own key.
+Gboard's on-device voice cleanup stage tends to rewrite Bengali dictation into Latin letters ("ami bhalo achi" instead of "আমি ভালো আছি"), and it mangles sentences that mix Bangla and English. Rambler Bangla is an open-source patch layer for one exact build, Gboard 18.3.1, that fixes this at the source: a **fail-closed smali patcher** (Python) proves it is looking at the profiled build and inserts two hooks, a **pure-Java policy runtime** keeps Bangla in Bengali script and picks one language per sentence, and a **device-free static suite** builds a synthetic APK, patches it and checks every step, including the refusals (the suite's runner is not in this snapshot, see [What's here](#whats-here)). It is a source-only tool: you patch an APK you obtain yourself and sign it with your own key.
 
 > **Honest status.** This is a maintainer project with private test builds. Host tests and a static CI suite back the engineering claims below. The on-device results come from the maintainer's own phone. Anything marked "design intent" is design, not proof. CI never installs the keyboard on a device, and the website's UI illustrations are mock-ups with synthetic text.
 
 ## Contents
 
+- [What's here](#whats-here)
 - [What it is and why](#what-it-is-and-why)
 - [Features](#features)
 - [How it works](#how-it-works)
@@ -95,27 +104,34 @@ Further runtime layers in the maintainer builds: segment-locked multilingual dic
 
 ## Device-free CI
 
-No phone, emulator or Google binary is needed to prove the pipeline. [`ci.yml`](.github/workflows/ci.yml) runs on every push to `main` and every pull request, and [`tests.yml`](.github/workflows/tests.yml) runs the static suite on its own. Both fail unless every check passes.
+No phone, emulator or Google binary is needed to prove the pipeline. In this repository [`ci.yml`](.github/workflows/ci.yml) runs on every pull request and every push to `main`, and fails unless all three jobs pass: the Python unit tests on Python 3.11 and 3.12, `ruff check`, and a gitleaks scan of the full history.
 
-The trick is the fixture: `fixtures/` builds a **synthetic APK with zero Google content** that mirrors the real anchors (class names, method signatures, the cleanup prompt shape). CI builds it from smali sources, patches it with the real patcher, and asserts on the result.
+The static suite is the other half of the design and **does not run here**: `tests/run_tests.sh` and `tools-src/` are not part of this snapshot (see [What's here](#whats-here)). [`tests.yml`](.github/workflows/tests.yml) is kept as a manual workflow that stops with that message. The table records what the suite covers in the project's original repository.
 
-| Suite | What it covers |
-| --- | --- |
-| **64 Python unit tests** (`tests/python/`, stdlib only; the clipboard-history store test also needs a JDK) | The patcher's pure helpers: smali string unescaping, `invoke` parsing, register-slot maths, `.locals` bumping, the dataflow search on the fixture smali, profile validation, a `--help` smoke test, the loanword `OVERRIDE` block matching `data/loanspell/overrides.tsv`, homepage checks that keep this README and the site honest, the clipboard-history store, privacy policy and guarded-build checks, and beta-analysis string-table checks on synthetic fixtures |
-| **Static suite**, 17 checks (`tests/run_tests.sh`) | 1. 51 JVM policy assertions (locale classification, override rule, SCRIPT GATE rewrite). 2. The fixture APK builds with smali, d8, aapt2 and signing. 3. End-to-end patch: anchors and fingerprints resolve, both hooks land, the enabled-languages value gets its own register, hook arguments don't clobber each other, the stock rule string is preserved, `--extension-dex` adds the runtime. 4. Fail-closed negatives: a wrong fingerprint, a one-character change to the stock rule and re-patching each exit 2 with no APK. 5. The patched, re-signed fixture passes APK Signature Scheme v2 verification and androguard parses both APKs |
+The trick is the fixture: `fixtures/` builds a **synthetic APK with zero Google content** that mirrors the real anchors (class names, method signatures, the cleanup prompt shape). The static suite builds it from smali sources, patches it with the real patcher, and asserts on the result.
+
+| Suite | Runs in this snapshot | What it covers |
+| --- | --- | --- |
+| **65 Python unit tests** (`tests/python/`, stdlib only; the clipboard-history store test also needs a JDK) | Yes, in CI | The patcher's pure helpers: smali string unescaping, `invoke` parsing, register-slot maths, `.locals` bumping, the dataflow search on the fixture smali, profile validation, a `--help` smoke test, the loanword `OVERRIDE` block matching `data/loanspell/overrides.tsv`, homepage checks that keep this README and the site honest, the clipboard-history store, privacy policy and guarded-build checks, and beta-analysis string-table checks on synthetic fixtures |
+| **Static suite**, 17 checks (`tests/run_tests.sh`) | No, its sources are not included | 1. 51 JVM policy assertions (locale classification, override rule, SCRIPT GATE rewrite). 2. The fixture APK builds with smali, d8, aapt2 and signing. 3. End-to-end patch: anchors and fingerprints resolve, both hooks land, the enabled-languages value gets its own register, hook arguments don't clobber each other, the stock rule string is preserved, `--extension-dex` adds the runtime. 4. Fail-closed negatives: a wrong fingerprint, a one-character change to the stock rule and re-patching each exit 2 with no APK. 5. The patched, re-signed fixture passes APK Signature Scheme v2 verification and androguard parses both APKs |
 
 What CI does **not** prove: runtime behaviour inside real Gboard on a phone. That evidence is the maintainer's device testing, recorded with dates in [`docs/VALIDATION.md`](docs/VALIDATION.md) and [`docs/EVIDENCE.md`](docs/EVIDENCE.md). The V29.3 golden corpus (`tests/v29.3/`, not included in this public snapshot) needs the maintainer build's runtime jar, so it is not part of CI. The emulator workflows (`android-smoke.yml`, `clipboard-e2e.yml`, `keyboard-onboarding-probe.yml`) are manual and pinned to a maintainer-supplied APK by SHA-256.
 
 ## Build from source
 
-Requirements: Linux x86_64 (the pinned aapt2 is the Linux build), a JDK 17+ (CI uses Temurin 21), Python 3 (3.11 in CI), `curl`, `unzip` and `zip`. The profile targets Gboard version name `18.3.1.977415014 beta`, version code `176004238`, `arm64-v8a`. Any other build is refused.
+Requirements: Linux x86_64 (the pinned aapt2 is the Linux build), a JDK 17+, Python 3 (3.11 and 3.12 in CI), `curl`, `unzip` and `zip`. The profile targets Gboard version name `18.3.1.977415014 beta`, version code `176004238`, `arm64-v8a`. Any other build is refused.
 
 ```bash
-git clone https://github.com/muhib-karim/Rambler-Bangla.git
-cd Rambler-Bangla
+git clone https://github.com/muhib-karim/Rambler-Bangla-Public.git
+cd Rambler-Bangla-Public
 
-# Fast unit tests: stdlib only, no toolchain needed
+# Runs from this snapshot: unit tests (stdlib only, no toolchain) and lint
 python3 -m unittest discover -s tests/python -v
+python3 -m pip install ruff==0.17.4 && ruff check .
+
+# Everything below needs the pinned toolchain. In this snapshot bootstrap_tools.sh
+# stops at its checksum step: tools-src/ and tests/run_tests.sh are not included
+# (see "What's here"), so these steps are a reference for a full checkout.
 
 # Fetch the pinned toolchain into ./tools (every file is checked against tools-src/toolchain.sha256)
 python3 -m pip install androguard==4.1.4
@@ -155,7 +171,7 @@ The patcher would rather do nothing than guess.
 - **Hash-based profile.** The fingerprint profile stores SHA-256 hashes plus short identifying fragments, never the full prompt text.
 - **Minimal footprint.** Two hook calls in one method plus one extra DEX. The stock rule string is kept as the fail-safe input.
 - **Never signs, never uploads.** The patcher and `verify_apk.sh` run offline; you sign with your own key. Only the setup steps touch the network: `bootstrap_tools.sh` checks each download's SHA-256, and `pip` installs the pinned `androguard==4.1.4`.
-- **Tested refusals.** CI asserts the refusals too (static suite stage 4), not just the happy path.
+- **Tested refusals.** The static suite asserts the refusals too (stage 4), not just the happy path.
 
 ### Privacy
 
@@ -188,7 +204,7 @@ Design intent, not re-verified on a current device. Both switches are in the key
 
 ## Source only, no APKs
 
-This repository is **source only and publishes no APKs**, now or later. A patched keyboard contains Google's proprietary Gboard code, which is not licensed for redistribution. You apply the patch to a Gboard 18.3.1 APK you obtain yourself, for your own device, and sign it with your own key. Releases such as [v29.4](https://github.com/muhib-karim/Rambler-Bangla/releases/tag/v29.4) are tagged source plus notes.
+This repository is **source only and publishes no APKs**, now or later. A patched keyboard contains Google's proprietary Gboard code, which is not licensed for redistribution. You apply the patch to a Gboard 18.3.1 APK you obtain yourself, for your own device, and sign it with your own key. Releases such as V29.4 ([notes](docs/V29.4-RELEASE-NOTES.md)) are tagged source plus notes. They were tagged in the project's original repository; this repository has no tags or releases yet.
 
 **Legal note.** Rambler Bangla is an independent project and is **not affiliated with Google**, nor endorsed or sponsored by it. Gboard is a trademark of Google LLC, used here only to name the app the patch targets. The repository contains no Google binaries, keys, model files or full prompt text: the profile holds SHA-256 hashes plus short identifying fragments. Modifying software you use may be restricted by its terms of service or by the law where you live; checking that is your responsibility, and the software comes with no warranty (GPL-3.0, sections 15 and 16). Never upload a patched Google APK, a signing key or private diagnostic output to this repository. The full review is in [`docs/LICENSING-AUDIT.md`](docs/LICENSING-AUDIT.md).
 
@@ -204,7 +220,7 @@ The hooks go into obfuscated code whose class and method names change between bu
 It refuses: `FAIL-CLOSED ABORT`, exit status 2, no output. Nothing is half-patched.
 
 **Does CI prove it works on my phone?**
-No. CI proves the patching pipeline on a synthetic APK, including the refusals. Phone results come from the maintainer's device and are labelled as such.
+No. The static suite proves the patching pipeline on a synthetic APK, including the refusals. Phone results come from the maintainer's device and are labelled as such.
 
 **Does it send my voice or text anywhere?**
 The patch layer has no network code. It only rewrites the prompt and rule strings inside Gboard's existing on-device cleanup step. Gboard's own behaviour is outside this project's audit.
@@ -219,15 +235,15 @@ The pinned aapt2 binary used to build the test fixture is the Linux build. The p
 Yes, if you rename the package with `rename/` before signing. See [`docs/SIDE-BY-SIDE.md`](docs/SIDE-BY-SIDE.md).
 
 **Bangla still came out in Latin letters. Is that Rambler?**
-Turn off **Bangla script correction** and try again. If the result is the same, it is Gboard's own output. If not, please [open an issue](https://github.com/muhib-karim/Rambler-Bangla/issues/new/choose) with the layout you used.
+Turn off **Bangla script correction** and try again. If the result is the same, it is Gboard's own output. If not, please [open an issue](https://github.com/muhib-karim/Rambler-Bangla-Public/issues/new/choose) with the layout you used.
 
 ## Roadmap
 
 ### Released
 
 - **V29.4.1 (2026-10-21, docs only, untagged):** this README and the website refresh. No code changes.
-- **V29.4 (2026-10-18)**, tag [v29.4](https://github.com/muhib-karim/Rambler-Bangla/releases/tag/v29.4): source release and new maintainer signing key; no conversion changes. Builds signed with the new key cannot install over a V29.3 build: uninstall once first. Notes: [`docs/V29.4-RELEASE-NOTES.md`](docs/V29.4-RELEASE-NOTES.md). Build record: [`ledger/v29.4-provenance.md`](ledger/v29.4-provenance.md).
-- **V29.3 (2026-09-24)**, tag [v29.3](https://github.com/muhib-karim/Rambler-Bangla/releases/tag/v29.3): one language per sentence in multilingual dictation, English loanword spelling in Bangla voice output. Notes: [`docs/V29.3-RELEASE-NOTES.md`](docs/V29.3-RELEASE-NOTES.md). Build record: [`ledger/v29.3-provenance.md`](ledger/v29.3-provenance.md).
+- **V29.4 (2026-10-18)**, tag `v29.4` in the original repository: source release and new maintainer signing key; no conversion changes. Builds signed with the new key cannot install over a V29.3 build: uninstall once first. Notes: [`docs/V29.4-RELEASE-NOTES.md`](docs/V29.4-RELEASE-NOTES.md). Build record: [`ledger/v29.4-provenance.md`](ledger/v29.4-provenance.md).
+- **V29.3 (2026-09-24)**, tag `v29.3` in the original repository: one language per sentence in multilingual dictation, English loanword spelling in Bangla voice output. Notes: [`docs/V29.3-RELEASE-NOTES.md`](docs/V29.3-RELEASE-NOTES.md). Build record: [`ledger/v29.3-provenance.md`](ledger/v29.3-provenance.md).
 - **V29 (2026-09-23):** field iteration. Design: [`docs/V29-DESIGN.md`](docs/V29-DESIGN.md), fixtures: [`docs/V29-FIXTURES.md`](docs/V29-FIXTURES.md).
 - **v28d:** last stable baseline (historical). Evidence: [`docs/V28-SEGMENT-LOCK.md`](docs/V28-SEGMENT-LOCK.md).
 
@@ -255,7 +271,7 @@ These are planned or in progress and **not working yet**.
 ### Limitations
 
 - Supports exactly one target build, Gboard 18.3.1. Any other build is refused by design.
-- CI proves the patching pipeline on a synthetic fixture, not runtime behaviour inside real Gboard.
+- The static suite proves the patching pipeline on a synthetic fixture, not runtime behaviour inside real Gboard.
 - Loanword spelling is approximate.
 
 ## Tech stack and project structure
@@ -265,26 +281,27 @@ These are planned or in progress and **not working yet**.
 | Patcher | Python 3 (standard library only), smali/baksmali 2.5.2 |
 | Policy runtime | Pure Java, no Android dependencies, `javac` then d8 (r8 8.3.37, `--min-api 24`) |
 | Upstream integration | Kotlin Morphe bytecode patch (`morphe-patch/`) and patch-list entry (`integration/`) |
-| APK tooling | aapt2 8.3.0, apksig 8.3.0 (`tools-src/MiniApkSigner.java`), androguard 4.1.4 for parsing |
+| APK tooling | aapt2 8.3.0, apksig 8.3.0 (`tools-src/MiniApkSigner.java`, not in this snapshot), androguard 4.1.4 for parsing |
 | Data | Loanword table from the CMU Pronouncing Dictionary (`data/loanspell/`); V29 normalization pairs from the Avro Keyboard phonetic dictionary |
-| CI | GitHub Actions on Ubuntu: Python unit tests and the static suite with Temurin 21 and Python 3.11 |
+| CI | GitHub Actions on Ubuntu: Python unit tests on 3.11 and 3.12, ruff and gitleaks. The static suite ran with Temurin 21 in the original repository |
 
 ```
 extension-src/        Java policy runtime (pure Java, no Android deps) + V29.x helpers
 standalone-patcher/   dex_patch.py: fingerprint/dataflow-anchored smali patcher
 fingerprints/         gboard-18.3.1.json fail-closed profile (hashes and short fragments)
 fixtures/             synthetic APK fixture (smali sources, manifest, build script)
-tests/                run_tests.sh static suite, python/ unit tests, Java policy test, v29.3 corpus
+tests/                python/ unit tests, java/ clipboard-store test and fixture
+                      (run_tests.sh, the Java policy test and the v29.3 corpus are not in this snapshot)
 scripts/              bootstrap_tools.sh, verify_apk.sh, clip_e2e.py (emulator driver)
 rename/               side-by-side package rename tooling
 morphe-patch/         Morphe bytecode patch + RuntimeAbi snippet for the upstream tree
 patches/              V29.3 smali hook diff for the patch layer's own classes
 data/loanspell/       loanword table, overrides and Java generator
 integration/          upstream patch-list entry
-tools-src/            MiniApkSigner.java and pinned toolchain checksums
+tools-src/            MiniApkSigner.java and pinned toolchain checksums (not in this snapshot)
 docs/                 design, evidence, validation, licensing docs and the GitHub Pages site
 ledger/               per-version build provenance records
-verification/         dated verification records
+verification/         dated verification records (not in this snapshot)
 ```
 
 ## Links
@@ -295,8 +312,8 @@ verification/         dated verification records
 | [`docs/README.md`](docs/README.md) | Index of every design, evidence, validation and licensing document |
 | [`docs/USER_GUIDE.md`](docs/USER_GUIDE.md) | Step by step: verify, patch, sign, install, exit codes |
 | [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) | Pipeline, policy runtime and CI design |
-| [Releases](https://github.com/muhib-karim/Rambler-Bangla/releases) and [`CHANGELOG.md`](CHANGELOG.md) | Tagged source releases and full history; how releases are cut: [`docs/RELEASING.md`](docs/RELEASING.md) |
-| [`CONTRIBUTING.md`](CONTRIBUTING.md) | Running the suites before a pull request, and what must never be committed |
+| [`CHANGELOG.md`](CHANGELOG.md) and [tags](https://github.com/muhib-karim/Rambler-Bangla-Public/tags) | Full version history. No tag or release has been published from this repository yet; how releases are cut: [`docs/RELEASING.md`](docs/RELEASING.md) |
+| [`CONTRIBUTING.md`](CONTRIBUTING.md) | Running the checks before a pull request, and what must never be committed |
 | [`SECURITY.md`](SECURITY.md) | Report security problems privately through GitHub's advisory form |
 | [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md) | Contributor Covenant 2.1 |
 

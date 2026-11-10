@@ -6,7 +6,7 @@ Please don't open a public issue for security problems (for example, a
 leaked key, a way to make the patch apply to the wrong app build, or text
 leaking out of password fields). Report them privately instead: Security tab
 > Report a vulnerability
-(https://github.com/muhib-karim/Rambler-Bangla/security/advisories/new).
+(https://github.com/muhib-karim/Rambler-Bangla-Public/security/advisories/new).
 
 ## Scope
 

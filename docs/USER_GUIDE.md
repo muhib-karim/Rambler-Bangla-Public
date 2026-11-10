@@ -46,8 +46,8 @@ diagnostic logs to this repository. See [`LICENSING-AUDIT.md`](LICENSING-AUDIT.m
 ## 1. Set up the toolchain
 
 ```bash
-git clone https://github.com/muhib-karim/Rambler-Bangla.git
-cd Rambler-Bangla
+git clone https://github.com/muhib-karim/Rambler-Bangla-Public.git
+cd Rambler-Bangla-Public
 bash scripts/bootstrap_tools.sh
 source tools/tool-env.sh
 ```
@@ -257,6 +257,6 @@ Two switches live in the keyboard settings, in the Rambler section:
   with a different key. Uninstall it first, or sign with the original key.
 - **Odd conversion on the phone**: turn off Bangla script correction and
   repeat. If the problem remains, it comes from Gboard. If not, open a
-  [bug report](https://github.com/muhib-karim/Rambler-Bangla/issues/new/choose)
+  [bug report](https://github.com/muhib-karim/Rambler-Bangla-Public/issues/new/choose)
   with the layout, what you said and what came out. Do not attach APKs,
   keystores or personal data.

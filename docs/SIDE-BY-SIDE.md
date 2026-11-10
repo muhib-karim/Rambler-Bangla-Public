@@ -6,7 +6,7 @@ signer conflict.
 
 - App display name: **Rambler Bangla**
 - Package / application ID: **com.aidev2024.ramblerbangla**
-- Intended public repo: **muhib-karim/Rambler-Bangla**
+- Public source repo: **muhib-karim/Rambler-Bangla-Public**
 - Base: PixelBoard 18.3.1 experimental Bengali-Unicode build
   (input APK SHA-256 61e771bd92d62ca9415e05aa5a1d7a542add0d2806c1fa81acdd9c81831c8d36)
 

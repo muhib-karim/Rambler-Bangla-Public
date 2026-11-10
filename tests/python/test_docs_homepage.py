@@ -12,7 +12,7 @@ from html.parser import HTMLParser
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 README = os.path.join(ROOT, "README.md")
 SITE = os.path.join(ROOT, "docs", "index.html")
-REPO_URL = "https://github.com/muhib-karim/Rambler-Bangla"
+REPO_URL = "https://github.com/muhib-karim/Rambler-Bangla-Public"
 SITE_URL = "https://muhib-karim.github.io/Rambler-Bangla/"
 
 
@@ -79,12 +79,20 @@ class ReadmeHomepageTests(unittest.TestCase):
         self.assertIn('src="docs/banner.svg"', first)
         self.assertTrue(os.path.isfile(os.path.join(ROOT, "docs", "banner.svg")))
 
-    def test_badges_for_ci_static_suite_release_and_licence(self):
-        for needle in ("actions/workflows/ci.yml/badge.svg",
-                       "actions/workflows/tests.yml/badge.svg",
-                       "img.shields.io/github/v/release/muhib-karim/Rambler-Bangla",
-                       "img.shields.io/github/license/muhib-karim/Rambler-Bangla"):
+    def test_badges_for_ci_and_licence_point_at_this_repo(self):
+        for needle in (f'href="{REPO_URL}/actions/workflows/ci.yml"',
+                       f'src="{REPO_URL}/actions/workflows/ci.yml/badge.svg',
+                       'src="https://img.shields.io/github/license/muhib-karim/Rambler-Bangla-Public"'):
             self.assertIn(needle, self.text)
+
+    def test_no_badge_for_what_this_repo_cannot_show(self):
+        # No release has been published from this repository, and tests.yml is
+        # manual-only because the static suite's sources are not shipped here.
+        # A badge for either would read "no releases found" or "no status".
+        for needle in ("img.shields.io/github/v/release",
+                       "releases/latest",
+                       "actions/workflows/tests.yml/badge.svg"):
+            self.assertNotIn(needle, self.text)
 
     def test_required_sections_exist(self):
         for section in ("What it is and why", "How it works", "Device-free CI",

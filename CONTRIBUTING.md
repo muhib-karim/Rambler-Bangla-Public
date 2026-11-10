@@ -9,19 +9,24 @@ also read the [Code of Conduct](CODE_OF_CONDUCT.md).
   pipeline, the policy runtime and the CI suite.
 - [`docs/USER_GUIDE.md`](docs/USER_GUIDE.md) shows how the tools are run
   end to end.
-- Bugs and ideas go in [issues](https://github.com/muhib-karim/Rambler-Bangla/issues/new/choose).
+- Bugs and ideas go in [issues](https://github.com/muhib-karim/Rambler-Bangla-Public/issues/new/choose).
   Security problems go to the private form described in
   [`SECURITY.md`](SECURITY.md).
 
 ## Before you open a pull request
 
-1. Run the fast unit tests (standard library only):
+1. Run the fast unit tests (standard library only) and the linter:
 
    ```bash
    python3 -m unittest discover -s tests/python -v
+   python3 -m pip install ruff==0.17.4 && ruff check .
    ```
 
-2. Fetch the toolchain and run the static suite:
+   CI runs both on every pull request, on Python 3.11 and 3.12, together
+   with a gitleaks secret scan.
+2. If your checkout has the static suite, fetch the toolchain and run it
+   too. This public snapshot does not ship `tests/run_tests.sh` or
+   `tools-src/`, so the step applies to a full checkout only:
 
    ```bash
    bash scripts/bootstrap_tools.sh
@@ -29,8 +34,6 @@ also read the [Code of Conduct](CODE_OF_CONDUCT.md).
    source tools/tool-env.sh
    bash tests/run_tests.sh      # expect "17 passed, 0 failed"
    ```
-
-   CI runs the same steps on every push and pull request.
 3. Keep changes small and targeted. The patch is fail-closed on purpose:
    a fingerprint mismatch must abort, never guess.
 4. Conversion changes need fixtures: add input/expected pairs so the

@@ -38,11 +38,12 @@ proprietary Gboard code (see [`LICENSING-AUDIT.md`](LICENSING-AUDIT.md)).
    bash tests/run_tests.sh      # expect "TEST SUITE: 17 passed, 0 failed"
    ```
 
-   Both [`ci.yml`](../.github/workflows/ci.yml) and
-   [`tests.yml`](../.github/workflows/tests.yml) must pass on `main`. If the
-   release changes the conversion behavior, also score the golden corpus in
-   `tests/v29.3/` (not included in this public snapshot) against the previous
-   baseline.
+   [`ci.yml`](../.github/workflows/ci.yml) must pass on `main`. So must the
+   static suite ([`tests.yml`](../.github/workflows/tests.yml)) wherever its
+   sources are present; it is manual-only in this public snapshot, which does
+   not ship them. If the release changes the conversion behavior, also score
+   the golden corpus in `tests/v29.3/` (not included in this public snapshot)
+   against the previous baseline.
 2. **Changelog.** Add a section to [`CHANGELOG.md`](../CHANGELOG.md) headed
    `## V<version> - YYYY-MM-DD` (dates are AEST/AEDT), with short bullets and a
    link to the release notes. State evidence levels honestly: host-tested,
@@ -87,8 +88,8 @@ git push origin v<version>
 
 Then create a GitHub Release from the tag:
 
-- Title: `V<version> - <one-line summary>`, as in the
-  [v29.3 release](https://github.com/muhib-karim/Rambler-Bangla/releases/tag/v29.3).
+- Title: `V<version> - <one-line summary>`, as in the v29.3 release (published in
+  the project's original repository; this repository has no releases yet).
 - Body: the contents of the release notes file.
 - Attachments: test logs at most. Never attach an APK, an AAB, a DEX file or a
   keystore.
