@@ -68,6 +68,9 @@ def site_tags():
     return parser.tags
 
 
+MOVED_NOTICE = "> **This project now lives at https://github.com/muhib-karim/Rambler-Bangla.**"
+
+
 class ReadmeHomepageTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
@@ -75,8 +78,12 @@ class ReadmeHomepageTests(unittest.TestCase):
         cls.heads = headings(cls.text)
 
     def test_banner_comes_first(self):
-        first = self.text.lstrip().splitlines()[0]
-        self.assertIn('src="docs/banner.svg"', first)
+        # The archive notice (a "> **This project now lives at" blockquote) may
+        # sit above the banner; the banner is the first line after it.
+        lines = [l for l in self.text.lstrip().splitlines() if l.strip()]
+        if lines[0].startswith(MOVED_NOTICE):
+            lines = lines[1:]
+        self.assertIn('src="docs/banner.svg"', lines[0])
         self.assertTrue(os.path.isfile(os.path.join(ROOT, "docs", "banner.svg")))
 
     def test_badges_for_ci_and_licence_point_at_this_repo(self):
