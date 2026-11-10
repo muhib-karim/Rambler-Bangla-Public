@@ -1,0 +1,49 @@
+name: Static test suite
+
+# Manual only. The static suite needs tests/run_tests.sh, tools-src/ and
+# tests/v29.3/, and none of them is part of this public source snapshot, so
+# this workflow cannot gate pushes or pull requests here. The first step says
+# so plainly instead of failing somewhere inside the toolchain. The checks that
+# do gate this repository are in ci.yml.
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Require the static suite sources
+        run: |
+          if [ ! -f tests/run_tests.sh ]; then
+            echo "::error::tests/run_tests.sh is not in this checkout. The public source snapshot does not ship the static suite (tests/run_tests.sh, tools-src/, tests/v29.3/), so this workflow cannot run here. Run ci.yml instead."
+            exit 1
+          fi
+
+      - name: Use preinstalled Temurin 21
+        run: |
+          echo "JAVA_HOME=$JAVA_HOME_21_X64" >> "$GITHUB_ENV"
+          echo "$JAVA_HOME_21_X64/bin" >> "$GITHUB_PATH"
+
+      - name: Fetch pinned toolchain
+        run: |
+          python3 -m pip install --quiet androguard==4.1.4
+          bash scripts/bootstrap_tools.sh
+
+      - name: Run tests
+        run: |
+          set -euo pipefail
+          source tools/tool-env.sh
+          bash tests/run_tests.sh | tee /tmp/test.log
+          # Exact summary line only. The earlier loose match on ", 0 failed" was
+          # satisfied by the stage 1 line "PolicyTest: 51 passed, 0 failed", so
+          # it passed whatever the suite total said.
+          grep -Eq '^TEST SUITE: [0-9]+ passed, 0 failed$' /tmp/test.log
