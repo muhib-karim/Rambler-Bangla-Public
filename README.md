@@ -1,3 +1,5 @@
+> **This project now lives at https://github.com/muhib-karim/Rambler-Bangla.** This repository is an archived snapshot and is no longer updated.
+
 <p align="center"><img src="docs/banner.svg" alt="Rambler Bangla: Bengali-first voice typing patch for Gboard 18.3.1" width="100%"></p>
 
 ## What's here

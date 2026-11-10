@@ -29,6 +29,10 @@ PRIVATE_REPO = re.compile(
     r"muhib-karim/Rambler-Bangla(?!-Public)"
 )
 
+# The one sanctioned link to the original repository: the README's archive
+# notice saying the project now lives there (it is public since 11 Nov 2026).
+MOVED_NOTICE = "> **This project now lives at https://github.com/muhib-karim/Rambler-Bangla.**"
+
 # Markdown links and images, plus the HTML attributes the README uses.
 LINK = re.compile(r"\]\(([^)\s]+)\)|(?:href|src)=\"([^\"]+)\"")
 
@@ -96,7 +100,8 @@ class PublicLinkTests(unittest.TestCase):
         hits = [f"{path}:{number}: {line.strip()[:120]}"
                 for path in scanned
                 for number, line in numbered_lines(path)
-                if private_repo_links(line)]
+                if private_repo_links(line)
+                and not (path == "README.md" and line.startswith(MOVED_NOTICE))]
         self.assertEqual(hits, [], "these link to the private repository; "
                                    "use muhib-karim/Rambler-Bangla-Public")
 
